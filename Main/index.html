@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Feliz Cumpleaños, Dad 🎂</title>
+
+  <!--
+  ═══════════════════════════════════════════════════════
+    FUENTES
+    Cargo dos fuentes de Google Fonts (gratis, online):
+    - "Cormorant Garamond": para títulos grandes, elegante
+    - "Nunito": para texto normal, legible y amigable
+  ═══════════════════════════════════════════════════════
+  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,400&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="index.css" />
+
+</head>
+<body>
+
+
+  <!--
+  ══════════════════════════════════════════════════════════
+    CANVAS DEL CONFETTI
+    JavaScript va a dibujar acá las partículas de colores.
+  ══════════════════════════════════════════════════════════
+  -->
+  <canvas id="canvas-confetti"></canvas>
+
+
+  <!--
+  ══════════════════════════════════════════════════════════
+    PANTALLA DE ENTRADA
+    Lo primero que ve el usuario. Al hacer click,
+    la función "abrirCarta()" en JavaScript la oculta.
+  ══════════════════════════════════════════════════════════
+  -->
+  <div id="pantalla-entrada" onclick="abrirCarta()">
+
+    <p class="entrada-titulo">
+      Feliz Cumpleaños
+      <em>Papá</em>
+    </p>
+
+    <p class="entrada-subtitulo">Una carta para ti</p>
+
+    <div class="entrada-linea"></div>
+
+    <p class="entrada-hint">Tocá para abrir ✦</p>
+
+  </div>
+
+
+  <!--
+  ══════════════════════════════════════════════════════════
+    CONTENIDO PRINCIPAL
+    Empieza invisible (opacity: 0 en el CSS).
+    Se hace visible cuando JS le agrega la clase "visible".
+  ══════════════════════════════════════════════════════════
+  -->
+  <div id="contenido">
+
+
+    <!-- ─── SECCIÓN 1: HERO ─── -->
+    <section class="hero">
+
+      <p class="hero-etiqueta">Hoy es tu día</p>
+
+      <h1 class="hero-titulo">
+        Gracias,
+        <em>Crack</em>
+      </h1>
+
+      <div class="hero-separador"></div>
+
+      <p class="hero-descripcion">
+        Por todo lo que hiciste, por todo lo que eres.<br/>
+        Me alegra tener al mejor papá del mundo.
+      </p>
+
+      <div class="hero-scroll">↓</div>
+
+    </section>
+
+
+    <!-- ─── SECCIÓN 2: LA CARTA ─── -->
+    <section class="seccion-carta animar-scroll">
+
+      <p class="seccion-etiqueta">De mi parte</p>
+      <h2 class="seccion-titulo">Una que no es suficiente para expresar todo lo que te quiero</h2>
+
+      <div class="carta-contenedor">
+
+        <!--
+          ACÁ VA TU TEXTO PERSONAL.
+          Podés escribir lo que quieras. Los saltos de línea
+          que hagas acá se van a ver en la página gracias
+          al "white-space: pre-line" del CSS.
+        -->
+        <p class="carta-texto">Papá,
+
+No sé si alguna vez te lo dije como se merece,
+pero hoy quiero que lo leas y lo sientas de verdad.
+
+Crecí viéndote trabajar sin parar.
+Llegar cansado y aún así estar presente.
+Eso me formó. Me enseñó que el amor
+no es solo lo que se dice — es lo que se hace
+todos los días, sin esperar nada a cambio.
+
+Gracias a ti vivo bien, estoy sano, soy feliz.
+Eso no es casualidad. Eso es lo que construiste.
+
+Hoy en tu cumpleaños quiero que sepas
+que te admiro más de lo que puedo expresar.
+Que te quiero demasiado.
+Que estoy orgulloso de ser tu hijo.
+
+Feliz cumpleaños, Crack. ✦</p>
+
+        <p class="carta-firma">— Tu hijo que te quiere mucho♥</p>
+
+      </div>
+
+    </section>
+
+
+    <!-- ─── SECCIÓN 4: ÁLBUM DE FOTOS ─── -->
+    <section class="seccion-album animar-scroll">
+
+      <div class="album-encabezado">
+        <p class="seccion-etiqueta">Felices momentos</p>
+        <h2 class="seccion-titulo" style="font-family: var(--fuente-titulo); font-size: clamp(2rem, 6vw, 3.5rem);">El álbum</h2>
+      </div>
+
+      <!--
+        La pista de fotos.
+        JavaScript lee el array "fotos" de abajo
+        y crea cada foto acá adentro automáticamente.
+      -->
+      <div class="album-pista-contenedor">
+        <div class="album-pista" id="album-pista">
+          <!-- las fotos las agrega JavaScript -->
+        </div>
+      </div>
+
+      <!-- controles: flecha izquierda, puntos, flecha derecha -->
+      <div class="album-controles">
+        <button class="btn-album" onclick="moverAlbum(-1)" aria-label="Foto anterior">←</button>
+        <div class="album-puntos" id="album-puntos">
+          <!-- los puntos los agrega JavaScript -->
+        </div>
+        <button class="btn-album" onclick="moverAlbum(1)" aria-label="Foto siguiente">→</button>
+      </div>
+
+    </section>
+
+
+    <!-- ─── FOOTER ─── -->
+    <footer>
+      Hecho con <span>♥</span> para el mejor papá del mundo.
+    </footer>
+
+
+  </div><!-- fin de #contenido -->
+
+
+  <!--
+  ══════════════════════════════════════════════════════════════════
+    JAVASCRIPT
+    Todo lo que "hace cosas" está acá abajo.
+    Está dividido en bloques bien separados y comentados.
+  ══════════════════════════════════════════════════════════════════
+  -->
+  <script src="index.js"></script>
+
+</body>
+</html>

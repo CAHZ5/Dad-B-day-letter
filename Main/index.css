@@ -1,0 +1,542 @@
+    /*
+    ═══════════════════════════════════════════════════════
+      VARIABLES GLOBALES
+      Acá defino los colores y valores que uso en todo
+      el CSS. Si quiero cambiar el color principal de la
+      página, solo lo cambio UNA vez acá y se aplica en
+      todos lados. Práctico.
+    ═══════════════════════════════════════════════════════
+    */
+    :root {
+      --fondo:         #0f0c0a;       /* negro cálido, fondo general */
+      --fondo-claro:   #1a1410;       /* un poco más claro, para tarjetas */
+      --oro:           #c9a84c;       /* dorado principal */
+      --oro-claro:     #f0d080;       /* dorado más brillante, para acentos */
+      --texto:         #e8ddd0;       /* blanco roto, para texto */
+      --texto-suave:   #9a8878;       /* gris cálido, para texto secundario */
+      --borde:         rgba(201, 168, 76, 0.2); /* borde dorado transparente */
+
+      --fuente-titulo: 'Cormorant Garamond', serif;
+      --fuente-texto:  'Nunito', sans-serif;
+    }
+
+
+    /*
+    ══════════════════
+      RESET BÁSICO
+      Elimino estilos
+      por defecto del
+      navegador.
+    ══════════════════
+    */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth; /* el scroll al hacer click en links es suave */
+    }
+
+    body {
+      font-family: var(--fuente-texto);
+      background-color: var(--fondo);
+      color: var(--texto);
+      overflow-x: hidden; /* evita scroll horizontal no deseado */
+    }
+
+
+    /*
+    ═══════════════════════════════════════════════════════
+      PANTALLA DE ENTRADA (el "sobre" que se abre)
+
+      Esta sección cubre TODA la pantalla al principio.
+      Cuando el usuario hace click, se oculta con una
+      animación y aparece la página de atrás.
+
+      position: fixed → queda fija sobre todo el contenido
+      inset: 0        → ocupa toda la pantalla (top/right/bottom/left: 0)
+      z-index: 1000   → se pone por encima de todo lo demás
+    ═══════════════════════════════════════════════════════
+    */
+    #pantalla-entrada {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: linear-gradient(160deg, #1a0a00 0%, #0f0c0a 60%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+
+      /* la transición se activa cuando JavaScript le agrega la clase "oculto" */
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+
+    /* Cuando JS agrega esta clase, la pantalla desaparece */
+    #pantalla-entrada.oculto {
+      opacity: 0;
+      transform: scale(1.05);
+      pointer-events: none; /* ya no recibe clicks */
+    }
+
+    .entrada-titulo {
+      font-family: var(--fuente-titulo);
+      font-size: clamp(3rem, 10vw, 6rem); /* tamaño responsivo: mínimo 3rem, máximo 6rem */
+      color: var(--oro-claro);
+      text-align: center;
+      line-height: 1.1;
+      text-shadow: 0 0 60px rgba(201, 168, 76, 0.3);
+
+      /* animación de entrada: aparece desde abajo */
+      animation: aparecerDesdeAbajo 1s ease both;
+    }
+
+    .entrada-titulo em {
+      display: block;
+      font-style: italic;
+      color: var(--oro);
+      font-size: 0.7em;
+    }
+
+    .entrada-subtitulo {
+      margin-top: 1.5rem;
+      font-size: 0.9rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--texto-suave);
+      animation: aparecerDesdeAbajo 1s ease 0.2s both; /* 0.2s de delay */
+    }
+
+    .entrada-hint {
+      margin-top: 4rem;
+      font-size: 0.9rem;
+      color: var(--texto-suave);
+      opacity: 0.7;
+      animation: aparecerDesdeAbajo 1s ease 0.5s both, parpadeo 2.5s ease-in-out 1.5s infinite;
+    }
+
+    /* línea decorativa dorada */
+    .entrada-linea {
+      width: 1px;
+      height: 60px;
+      background: linear-gradient(to bottom, transparent, var(--oro), transparent);
+      margin: 2rem auto 0;
+      animation: aparecerDesdeAbajo 1s ease 0.4s both;
+    }
+
+
+    /*
+    ═══════════════════════════════════════════════════════
+      CANVAS DEL CONFETTI
+      El canvas es un elemento HTML donde JavaScript
+      dibuja el confetti frame por frame.
+      Está por encima de todo excepto la pantalla de entrada.
+    ═══════════════════════════════════════════════════════
+    */
+    #canvas-confetti {
+      position: fixed;
+      inset: 0;
+      pointer-events: none; /* no interfiere con clicks */
+      z-index: 999;
+    }
+
+
+    /*
+    ═══════════════════════════════════════════════════════
+      CONTENIDO PRINCIPAL
+      Empieza invisible. JS le agrega la clase "visible"
+      cuando el usuario abre la carta.
+    ═══════════════════════════════════════════════════════
+    */
+    #contenido {
+      opacity: 0;
+      transition: opacity 0.8s ease 0.4s;
+    }
+
+    #contenido.visible {
+      opacity: 1;
+    }
+
+
+    /*
+    ══════════════════════════════════════
+      SECCIÓN HERO (la primera que se ve)
+    ══════════════════════════════════════
+    */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 2rem;
+      text-align: center;
+      position: relative;
+    }
+
+    /* brillo difuso de fondo, puramente decorativo */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, rgba(201,168,76,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-etiqueta {
+      font-size: 0.75rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--oro);
+      margin-bottom: 2rem;
+      opacity: 0.8;
+    }
+
+    .hero-titulo {
+      font-family: var(--fuente-titulo);
+      font-size: clamp(3.5rem, 12vw, 8rem);
+      line-height: 1;
+      color: var(--texto);
+    }
+
+    .hero-titulo em {
+      font-style: italic;
+      color: var(--oro-claro);
+      display: block;
+    }
+
+    .hero-separador {
+      width: 80px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--oro), transparent);
+      margin: 2.5rem auto;
+    }
+
+    .hero-descripcion {
+      max-width: 550px;
+      font-size: 1.1rem;
+      line-height: 1.9;
+      color: var(--texto-suave);
+      font-weight: 300;
+    }
+
+    /* flecha que invita a hacer scroll */
+    .hero-scroll {
+      margin-top: 4rem;
+      color: var(--texto-suave);
+      font-size: 1.5rem;
+      animation: rebote 2s ease-in-out infinite;
+    }
+
+
+    /*
+    ══════════════════════════════════════════
+      SECCIÓN DE LA CARTA (texto personal)
+    ══════════════════════════════════════════
+    */
+    .seccion-carta {
+      padding: 6rem 2rem;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .seccion-etiqueta {
+      font-size: 0.75rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--oro);
+      text-align: center;
+      margin-bottom: 0.8rem;
+    }
+
+    .seccion-titulo {
+      font-family: var(--fuente-titulo);
+      font-size: clamp(2rem, 6vw, 3.5rem);
+      text-align: center;
+      margin-bottom: 3rem;
+      color: var(--texto);
+    }
+
+    .carta-contenedor {
+      background: var(--fondo-claro);
+      border: 1px solid var(--borde);
+      border-radius: 20px;
+      padding: clamp(2rem, 5vw, 4rem);
+      position: relative;
+    }
+
+    /* comillas decorativas gigantes de fondo */
+    .carta-contenedor::before {
+      content: '"';
+      position: absolute;
+      top: 1rem;
+      left: 2rem;
+      font-family: var(--fuente-titulo);
+      font-size: 8rem;
+      color: var(--oro);
+      opacity: 0.08;
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .carta-texto {
+      font-size: clamp(1rem, 2.5vw, 1.15rem);
+      line-height: 2.1;
+      color: var(--texto);
+      white-space: pre-line; /* respeta los saltos de línea que escribo abajo */
+      font-style: italic;
+      font-weight: 300;
+    }
+
+    .carta-firma {
+      margin-top: 2.5rem;
+      text-align: right;
+      font-family: var(--fuente-titulo);
+      font-size: 1.5rem;
+      color: var(--oro);
+      font-style: italic;
+    }
+
+    /*
+    ══════════════════════════════════════════════════════════
+      SECCIÓN DEL ÁLBUM DE FOTOS
+
+      Funciona así:
+      - Hay un "contenedor" que recorta lo que se sale
+      - Adentro hay una "pista" con todas las fotos alineadas
+      - JS mueve esa pista a la izquierda/derecha para "navegar"
+
+      Vos solo tenés que poner los archivos de fotos en la misma
+      carpeta que este HTML, y escribir sus nombres en el array
+      del JavaScript. El resto es automático.
+    ══════════════════════════════════════════════════════════
+    */
+    .seccion-album {
+      padding: 6rem 0;
+      overflow: hidden; /* importante: recorta la pista que se sale */
+    }
+
+    .album-encabezado {
+      text-align: center;
+      padding: 0 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .album-pista-contenedor {
+      position: relative;
+    }
+
+    /* la pista se mueve con JS cambiando su "transform: translateX" */
+    .album-pista {
+      display: flex;
+      gap: 1.5rem;
+      padding: 1rem 2rem 3rem;
+      transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+      /* cubic-bezier es la "curva" de la animación, da efecto suave con frenada */
+    }
+
+    .foto-item {
+      flex: 0 0 auto; /* no se achica ni se estira */
+      width: clamp(260px, 35vw, 340px);
+      aspect-ratio: 3 / 4; /* proporción de la foto, tipo retrato */
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid var(--borde);
+      background: var(--fondo-claro);
+    }
+
+    .foto-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover; /* la foto llena el espacio sin deformarse */
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    .foto-item:hover img {
+      transform: scale(1.04); /* zoom suave al pasar el mouse */
+    }
+
+    /* pie de foto, aparece sobre la imagen */
+    .foto-caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 2.5rem 1rem 1rem;
+      background: linear-gradient(to top, rgba(0,0,0,0.75), transparent);
+      color: white;
+      font-size: 0.9rem;
+      font-style: italic;
+      font-weight: 300;
+    }
+
+    /* botones de navegación del álbum */
+    .album-controles {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 1rem;
+      padding: 0 2rem;
+    }
+
+    .btn-album {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: 1px solid var(--borde);
+      background: var(--fondo-claro);
+      color: var(--oro);
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: background 0.2s ease, border-color 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-album:hover {
+      background: var(--oro);
+      color: var(--fondo);
+      border-color: var(--oro);
+    }
+
+    /* indicadores de posición (los puntitos) */
+    .album-puntos {
+      display: flex;
+      gap: 8px;
+    }
+
+    .punto {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--texto-suave);
+      opacity: 0.3;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      cursor: pointer;
+    }
+
+    .punto.activo {
+      opacity: 1;
+      background: var(--oro);
+      transform: scale(1.4);
+    }
+
+
+    /*
+    ══════════════════════════════════════════
+      FOOTER (pie de página)
+    ══════════════════════════════════════════
+    */
+    footer {
+      padding: 3rem 2rem;
+      text-align: center;
+      color: var(--texto-suave);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--borde);
+      font-weight: 300;
+    }
+
+    footer span {
+      color: var(--oro);
+    }
+
+
+    /*
+    ══════════════════════════════════════════════════
+      GLOBOS
+      Se generan desde JavaScript. Cada globo es un
+      <div> con esta clase que flota hacia arriba.
+    ══════════════════════════════════════════════════
+    */
+    .globo-wrap {
+      position: fixed;
+      bottom: -30px;
+      pointer-events: none;
+      z-index: 998;
+    }
+
+    .globo {
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      position: relative;
+      animation: flotarArriba linear forwards;
+    }
+
+    /* el hilo del globo */
+    .globo::after {
+      content: '';
+      position: absolute;
+      bottom: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1px;
+      height: 20px;
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+
+    /*
+    ══════════════════════════════════════════════════
+      ANIMACIONES CSS
+      Definen cómo se mueven/aparecen las cosas.
+      "from" es el estado inicial, "to" es el final.
+    ══════════════════════════════════════════════════
+    */
+
+    /* aparece desde abajo */
+    @keyframes aparecerDesdeAbajo {
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* parpadeo suave */
+    @keyframes parpadeo {
+      0%, 100% { opacity: 0.4; }
+      50%       { opacity: 1; }
+    }
+
+    /* rebote vertical */
+    @keyframes rebote {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(8px); }
+    }
+
+    /* globo flotando hacia arriba */
+    @keyframes flotarArriba {
+      0%   { transform: translateY(0)     rotate(-4deg); opacity: 1; }
+      50%  { transform: translateY(-55vh) rotate(4deg); }
+      100% { transform: translateY(-110vh) rotate(-2deg); opacity: 0; }
+    }
+
+
+    /*
+    ══════════════════════════════════════════
+      ANIMACIÓN DE SCROLL
+      Las secciones empiezan invisibles y aparecen
+      cuando el usuario llega a ellas haciendo scroll.
+      JavaScript las detecta con IntersectionObserver.
+    ══════════════════════════════════════════════════
+    */
+    .animar-scroll {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .animar-scroll.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
