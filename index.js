@@ -16,13 +16,13 @@
     ════════════════════════════════════════════════════════
     */
   const fotos = [
-    { archivo: "Fotos/foto1.JPG", caption: "Un momento especial" },
-    { archivo: "Fotos/foto2.JPG", caption: "Family" },
-    { archivo: "Fotos/foto3.JPG", caption: "Recuerdos que guardo" },
-    { archivo: "Fotos/foto4.JPG", caption: "Te quiero, Pa" },
-    { archivo: "Fotos/foto5.JPG", caption: "Mis favoritos" },
-    { archivo: "Fotos/foto6.JPG", caption: "Gracias por todo" },
-    { archivo: "Fotos/foto7.JPG", caption: "Eres el mejor" },
+    { archivo: "foto1.JPG", caption: "Un momento especial" },
+    { archivo: "foto2.JPG", caption: "Family" },
+    { archivo: "foto3.JPG", caption: "Recuerdos que guardo" },
+    { archivo: "foto4.JPG", caption: "Te quiero, Pa" },
+    { archivo: "foto5.JPG", caption: "Mis favoritos" },
+    { archivo: "foto6.JPG", caption: "Gracias por todo" },
+    { archivo: "foto7.JPG", caption: "Eres el mejor" },
   ];
 
     /*
