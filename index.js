@@ -8,7 +8,7 @@
 
       Cada foto es un objeto con dos propiedades:
         - archivo: el nombre del archivo (tiene que estar
-                   en la misma carpeta que este HTML)
+                  en la misma carpeta que este HTML)
         - caption: el texto que aparece abajo de la foto
 
       Para agregar una foto: copiás una línea y cambiás
@@ -16,13 +16,13 @@
     ════════════════════════════════════════════════════════
     */
   const fotos = [
-    { archivo: "Fotos/foto1.jpg", caption: "Un momento especial" },
-    { archivo: "Fotos/foto2.jpg", caption: "Family" },
-    { archivo: "Fotos/foto3.jpg", caption: "Recuerdos que guardo" },
-    { archivo: "Fotos/foto4.jpg", caption: "Te quiero, Pa" },
-    { archivo: "Fotos/foto5.jpg", caption: "Mis favoritos" },
-    { archivo: "Fotos/foto6.jpg", caption: "Gracias por todo" },
-    { archivo: "Fotos/foto7.jpg", caption: "Eres el mejor" },
+    { archivo: "Fotos/foto1.JPG", caption: "Un momento especial" },
+    { archivo: "Fotos/foto2.JPG", caption: "Family" },
+    { archivo: "Fotos/foto3.JPG", caption: "Recuerdos que guardo" },
+    { archivo: "Fotos/foto4.JPG", caption: "Te quiero, Pa" },
+    { archivo: "Fotos/foto5.JPG", caption: "Mis favoritos" },
+    { archivo: "Fotos/foto6.JPG", caption: "Gracias por todo" },
+    { archivo: "Fotos/foto7.JPG", caption: "Eres el mejor" },
   ];
 
     /*
